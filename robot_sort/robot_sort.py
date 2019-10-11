@@ -92,31 +92,36 @@ class SortingRobot:
         """
         return self._light == "ON"
 
-    def my_sorter(self):
-    #if self._light == "OFF":
-    #    return "sorted"
-    self.set_light_off()
-#     if self._item==None:
-#         self.swap_item()
-    while self.can_move_right():
-        self.move_right()
-        print(self._list,sr._position,sr._item)
-        if self.compare_item()==1 or self.compare_item()==None:
-            print('swap')
+    def sort(self):
+        print(self._list,self._light,self._position)
+        if self._item is None and self._light=="ON" and self._position==0:
+                return "done"
+        self.set_light_on()
+
+        if self.compare_item() is None:
             self.swap_item()
-            self.set_light_on()
-        elif self.compare_item()==-1:
-            print('dont swap')
-            #self.move_left()
-            #self.swap_item()
-    #my_sorter(self._list,sr)
-    if self._light=="OFF":
-        print("done!")
-    else:
-        print("continue")
-        while self.can_move_left():
-            self.move_left()
-        my_sorter(self)
+        if self.can_move_right():
+            if self.compare_item()==-1:
+                self.swap_item()
+                self.set_light_off()
+                self.move_right()
+                self.sort()
+            else:
+                self.move_right()
+                self.sort()
+        elif self.compare_item()==1:
+            self.swap_item()
+            self.set_light_off()
+            while self.can_move_left():
+                self.move_left()
+            if self._item is None and self._light=="ON":
+                return "done"
+            else:
+                self.sort()
+        else:
+            while self.can_move_left():
+                self.move_left()
+            self.sort()
 
 
 if __name__ == "__main__":
